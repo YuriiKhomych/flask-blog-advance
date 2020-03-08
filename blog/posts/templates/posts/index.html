@@ -9,6 +9,8 @@
 {% endblock %}
 
 {% block content %}
+    {#    https://getbootstrap.com/docs/4.0/components/buttons/#}
+    <a class="btn btn-primary" href="{{ url_for('posts.create_post') }}">Create post</a>
     {% for post in posts %}
         <p>
             <a href="{{ url_for('posts.post_detail', slug=post.slug) }}">{{ post.title }}</a>
