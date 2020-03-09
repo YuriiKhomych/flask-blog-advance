@@ -15,9 +15,11 @@ def create_app():
 
     db.init_app(app)
 
+    from blog.errors.view import errors
     from blog.main.view import main
     from blog.posts.view import posts
 
+    app.register_blueprint(errors)
     app.register_blueprint(main)
     app.register_blueprint(posts, url_prefix='/blog')
 
