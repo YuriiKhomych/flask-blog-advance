@@ -20,3 +20,10 @@
         {{ post.body }}
     </div>
 {% endblock %}
+
+{% block button %}
+
+    {#    https://getbootstrap.com/docs/4.0/components/buttons/#}
+    <a class="btn btn-primary" href="{{ url_for('posts.edit_post', slug=post.slug) }}">Edit post</a>
+
+{% endblock %}
