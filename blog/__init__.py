@@ -1,7 +1,7 @@
 from flask import Flask
 
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
+from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 
 from blog.config import Configuration
@@ -23,9 +23,18 @@ def create_app():
 
     ### ADMIN ###
     from blog.posts.models import Post, Tag
+    from blog.admin.view import HomeAdminView, PostAdminView, TagAdminView
+    admin = Admin(
+        app,
+        'FlaskApp',
+        url='/',
+        index_view=HomeAdminView(name='Home')
+    )
+    admin.add_view(PostAdminView(Post, db.session))
+    admin.add_view(TagAdminView(Tag, db.session))
 
-    admin = Admin(app)
-    admin.add_view(ModelView(Post, db.session))
-    admin.add_view(ModelView(Tag, db.session))
-
+    ### Flask-security ###
+    from blog.admin.models import User, Role
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+    security = Security(app, user_datastore)
     return app
