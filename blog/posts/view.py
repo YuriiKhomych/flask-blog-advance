@@ -5,6 +5,7 @@ from flask_security import login_required
 from blog import db
 from blog.posts.models import Post, Tag
 from blog.posts.forms import PostForm
+from users.models import User
 
 posts = Blueprint('posts', __name__, template_folder='templates')
 
@@ -69,6 +70,19 @@ def post_detail(slug):
     post = Post.query.filter(Post.slug == slug).first_or_404()
     tags = post.tags
     return render_template('posts/post_detail.html', post=post, tags=tags)
+
+
+@posts.route("/user/<string:username>")
+def user_posts(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = (
+        Post.query.filter_by(author=user)
+            .order_by(Post.date_posted.desc())
+            .paginate(page=page, per_page=5)
+    )
+    # todo
+    return render_template('posts/user_posts.html', posts=posts, user=user)
 
 
 # http://localhost/blog/tag/python
