@@ -1,5 +1,4 @@
 from flask import Flask
-
 from flask_admin import Admin
 from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
@@ -34,6 +33,10 @@ def create_app():
     )
     admin.add_view(PostAdminView(Post, db.session))
     admin.add_view(TagAdminView(Tag, db.session))
+
+    from api import api_blueprint
+
+    app.register_blueprint(api_blueprint, url_prefix='/api')
 
     ### Flask-security ###
     from blog.admin.models import User, Role
